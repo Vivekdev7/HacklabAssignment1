@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traffic Light Demo</title>
+<style>
+  .button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+  }
+  #red { background-color: red; }
+  #yellow { background-color: yellow; }
+  #green { background-color: green; }
+  .inactive { background-color: black; }
+</style>
+</head>
+<body>
+
+<button id="red" class="button">Red</button>
+<button id="yellow" class="button">Yellow</button>
+<button id="green" class="button">Green</button>
+
+<script>
+  const trafficLight = {
+    currentState: 'red',
+    transitions: {
+      red: { nextState: 'green', duration: 20000 },
+      green: { nextState: 'yellow', duration: 15000 },
+      yellow: { nextState: 'red', duration: 5000 }
+    },
+    timer: null,
+    startTimer: function() {
+      this.timer = setTimeout(() => {
+        this.changeState(this.transitions[this.currentState].nextState);
+      }, this.transitions[this.currentState].duration);
+    },
+    resetTimer: function() {
+      clearTimeout(this.timer);
+      this.startTimer();
+    },
+    changeState: function(newState) {
+      this.currentState = newState;
+      this.updateButtons();
+      this.resetTimer();
+    },
+    updateButtons: function() {
+      const buttons = document.querySelectorAll('.button');
+      buttons.forEach(button => {
+        if (button.id === this.currentState) {
+          button.classList.remove('inactive');
+        } else {
+          button.classList.add('inactive');
+        }
+      });
+    }
+  };
+
+  document.getElementById('red').addEventListener('click', () => {
+    trafficLight.changeState('red');
+  });
+
+  document.getElementById('yellow').addEventListener('click', () => {
+    trafficLight.changeState('yellow');
+  });
+
+  document.getElementById('green').addEventListener('click', () => {
+    trafficLight.changeState('green');
+  });
+
+  trafficLight.startTimer();
+</script>
+
+</body>
+</html>
